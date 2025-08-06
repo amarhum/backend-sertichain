@@ -140,9 +140,6 @@ const checkTransaction = async (req, res) => {
         return res.status(500).json({ error: "Gagal mengonversi PDF ke gambar" });
       }
       
-      // imageBuffer = await sharp(imagePath)
-      // .resize({ width: 800}) // Sesuaikan skala jika butuh lebih tajam
-      // .toBuffer();
 
       imageBuffer = fs.readFileSync(imagePath);
 
@@ -157,7 +154,7 @@ const checkTransaction = async (req, res) => {
       imageBuffer = await sharp(req.file.buffer)
         .resize({ width: 1200 })
         .grayscale()
-        .threshold(220) // Optional, tergantung kualitas teks
+        .threshold(220)
         .toBuffer();
     } else {
       return res.status(400).json({ error: "Tipe file tidak didukung. Gunakan PDF atau Gambar." });
@@ -268,21 +265,6 @@ const checkTransaction = async (req, res) => {
         
       ], "nama");
 
-    // if (!nama) {
-    //   const topLines = topText.split("\n").map(line => line.trim());
-    //   for (let i = 0; i < topLines.length; i++) {
-    //     const line = topLines[i];
-    //     if (/^[A-Z][a-z]+( [A-Z][a-z]+){1,3}$/.test(line)) {
-    //       const nextLine = topLines[i + 1] || "";
-    //       if (/^[A-Z][a-z]+( [A-Z][a-z]+){0,2}$/.test(nextLine)) {
-    //         nama = `${line} ${nextLine}`.trim();
-    //       } else {
-    //         nama = line;
-    //       }
-    //       break;
-    //     }
-    //   }
-    // }
 
       if (!nama) {
       const candidates = [topText, bottomText, fullText];
@@ -301,7 +283,7 @@ const checkTransaction = async (req, res) => {
             break;
           }
         }
-        if (nama) break; // Keluar dari loop jika sudah ketemu
+        if (nama) break;
       }
     }
 
